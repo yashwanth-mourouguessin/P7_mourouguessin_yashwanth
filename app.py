@@ -8,11 +8,11 @@ app = Flask(__name__)
 transformer = pickle.load(open('transformer.pkl', 'rb'))
 
 from zipfile import ZipFile
-with ZipFile('rdf_classifier.pkl.zip', 'r') as zip:    
+#with ZipFile('rdf_classifier.pkl.zip', 'r') as zip:    
     #zip.printdir() 
-    zip.extractall()
+    #zip.extractall()
     
-model = pickle.load(open('rdf_classifier.pkl', 'rb'))
+model = pickle.load(open('xgb_classifier_2.pkl', 'rb'))
 threshold = 0.15
 
 selected_col_1 = ['CNT_CHILDREN', 'AMT_INCOME_TOTAL', 'AMT_CREDIT', 'REGION_POPULATION_RELATIVE', 
