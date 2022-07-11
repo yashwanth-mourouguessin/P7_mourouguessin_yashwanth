@@ -5,15 +5,12 @@ import pandas as pd
 import sklearn
 
 app = Flask(__name__)
-transformer = pickle.load(open('transformer.pkl', 'rb'))
+transformer = pickle.load(open('transformers.pkl', 'rb'))
 
 from zipfile import ZipFile
-#with ZipFile('rdf_classifier.pkl.zip', 'r') as zip:    
-    #zip.printdir() 
-    #zip.extractall()
     
-model = pickle.load(open('xgb_classifier_2.pkl', 'rb'))
-threshold = 0.15
+model = pickle.load(open('xgb_classifier_final.pkl', 'rb'))
+threshold = 0.35
 
 selected_col_1 = ['CNT_CHILDREN', 'AMT_INCOME_TOTAL', 'AMT_CREDIT', 'REGION_POPULATION_RELATIVE', 
                 'DAYS_BIRTH', 'DAYS_EMPLOYED', 'DAYS_REGISTRATION', 'DAYS_ID_PUBLISH', 'FLAG_MOBIL', 
@@ -37,10 +34,16 @@ def predict_api():
     '''
     For direct API calls trought request
     '''
+    vec = pd.DataFrame()
+    
     data = request.get_json(force=True)
     df = pd.json_normalize(data)
-    vec = transformer.transform(df[selected_col])
-    proba = model.predict_proba(vec)[:,1]
+    
+    #for col in selected_col:
+    #    vec[col] = transformer[col].transform([df[col]]).reshape(1, 1)[0]
+    #vec = transformer.transform(df[selected_col])
+
+    proba = model.predict_proba(df.to_numpy())[:,1]
     output = (proba >= threshold).astype('int')
 
     return {'proba': float(proba[0]), 'output': int(output[0])}
