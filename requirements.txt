@@ -1,0 +1,12 @@
+# Function dependencies "package>=version", for example:
+pandas==1.3.4
+numpy
+scikit-learn==1.0.2
+flask
+pickle
+requests
+json
+streamlit
+streamlit_shap
+plotly.graph_objects
+shap
