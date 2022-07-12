@@ -6,8 +6,6 @@ import sklearn
 
 app = Flask(__name__)
 transformer = pickle.load(open('transformers.pkl', 'rb'))
-
-from zipfile import ZipFile
     
 model = pickle.load(open('xgb_classifier_final.pkl', 'rb'))
 threshold = 0.35
