@@ -34,8 +34,6 @@ BASE = "http://127.0.0.1:5000/"
 st.title('Scoring Clients')
 
 df = pd.read_csv('test_df.csv')
-#st.dataframe(df)
-
 
 vec = pd.DataFrame()
 for col in selected_col:
@@ -44,11 +42,11 @@ vec['SK_ID_CURR'] = df.SK_ID_CURR
 
 # FEATURE IMPORTANCE
 st.subheader('FEATURE IMPORTANCE')
-explainer = shap.TreeExplainer(model)
-shap_values = explainer.shap_values(vec[selected_col])
-st_shap(shap.summary_plot(shap_values, features=vec[selected_col].to_numpy(), feature_names=vec[selected_col].columns))
+explainer_1 = shap.Explainer(model, vec[selected_col])
+shap_values_1 = explainer_1(vec[selected_col])
+st_shap(shap.plots.bar(shap_values_1, max_display=46))
 
-#
+
 st.subheader("Client's informations")
 option = st.selectbox('id_client', tuple(df.SK_ID_CURR.tolist()))
 df_per_personne = df.loc[df.SK_ID_CURR == option]
@@ -56,10 +54,9 @@ st.dataframe(df_per_personne)
 
 #st.subheader("Transformed informations")
 vec_per_personne = vec.loc[vec.SK_ID_CURR == option]
-#st.dataframe(vec_per_personne)
+idx = vec.loc[vec.SK_ID_CURR == option].index[0]
 
 res = requests.post(BASE, json=json.loads(vec_per_personne[selected_col].to_json(orient="records")))
-#st.json(res.json())
 
 
 fig = go.Figure(go.Indicator(
@@ -94,9 +91,5 @@ st.plotly_chart(fig)
     
 # IMPORTANCE DES FEATURES D'UNE PERSONNE
 st.header("Client's features importance")
-st_shap(shap.force_plot(explainer.expected_value,
-                            explainer.shap_values(vec_per_personne[selected_col]),
-                            features=vec_per_personne[selected_col],
-                            feature_names=vec_per_personne[selected_col].columns))
 
-
+st_shap(shap.plots.bar(shap_values_1[idx]))
