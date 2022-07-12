@@ -8,5 +8,5 @@ requests
 #json
 streamlit
 streamlit_shap
-plotly.graph_objects
+plotly
 shap
