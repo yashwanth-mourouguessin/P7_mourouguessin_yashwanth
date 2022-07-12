@@ -5,7 +5,7 @@ scikit-learn==1.0.2
 Flask
 #pickle
 requests
-json
+#json
 streamlit
 streamlit_shap
 plotly.graph_objects
