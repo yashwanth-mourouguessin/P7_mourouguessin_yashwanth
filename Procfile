@@ -1,1 +1,1 @@
-web: sh setup.sh && python3 app.py && streamlit run stream.py
+web: sh setup.sh && uvicorn app:app && streamlit run stream.py
