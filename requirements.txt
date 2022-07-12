@@ -10,3 +10,4 @@ streamlit
 streamlit_shap
 plotly
 shap
+matplotlib
