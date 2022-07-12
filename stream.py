@@ -70,20 +70,33 @@ fig = go.Figure(go.Indicator(
     gauge = {'axis': {'range': [0, 1]},
              'threshold' : {'line': {'color': "red", 'width': 4}, 'thickness': 0.75, 'value': 0.35}}))
 
-with st.expander("OUTPUT"):
-    st.header("Target")
-    st.subheader(res.json()['output'])
+#with st.expander("OUTPUT"):
+#    st.header("Target")
+#    st.subheader(res.json()['output'])
 
 
-    st.header("Score")
-    st.plotly_chart(fig)
+#    st.header("Score")
+#    st.plotly_chart(fig)
     
     # IMPORTANCE DES FEATURES D'UNE PERSONNE
-    st.header("Client's features importance")
-    st_shap(shap.force_plot(explainer.expected_value,
+#    st.header("Client's features importance")
+#    st_shap(shap.force_plot(explainer.expected_value,
+#                            explainer.shap_values(vec_per_personne[selected_col]),
+#                            features=vec_per_personne[selected_col],
+#                            feature_names=vec_per_personne[selected_col].columns))
+
+st.header("Target")
+st.subheader(res.json()['output'])
+
+
+st.header("Score")
+st.plotly_chart(fig)
+    
+# IMPORTANCE DES FEATURES D'UNE PERSONNE
+st.header("Client's features importance")
+st_shap(shap.force_plot(explainer.expected_value,
                             explainer.shap_values(vec_per_personne[selected_col]),
                             features=vec_per_personne[selected_col],
                             feature_names=vec_per_personne[selected_col].columns))
-
 
 
