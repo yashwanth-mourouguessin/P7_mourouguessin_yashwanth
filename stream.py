@@ -5,7 +5,7 @@ import pickle
 import requests
 import json
 from streamlit_shap import st_shap
-
+import matplotlib.pyplot as plt
 import shap
 import plotly.graph_objects as go
 
@@ -46,7 +46,6 @@ explainer_1 = shap.Explainer(model, vec[selected_col])
 shap_values_1 = explainer_1(vec[selected_col])
 st_shap(shap.plots.bar(shap_values_1, max_display=46))
 
-
 st.subheader("Client's informations")
 option = st.selectbox('id_client', tuple(df.SK_ID_CURR.tolist()))
 df_per_personne = df.loc[df.SK_ID_CURR == option]
@@ -54,6 +53,7 @@ st.dataframe(df_per_personne)
 
 #st.subheader("Transformed informations")
 vec_per_personne = vec.loc[vec.SK_ID_CURR == option]
+df_per_personne = df.loc[df.SK_ID_CURR == option]
 idx = vec.loc[vec.SK_ID_CURR == option].index[0]
 
 res = requests.post(BASE, json=json.loads(vec_per_personne[selected_col].to_json(orient="records")))
@@ -78,4 +78,33 @@ with st.expander("OUTPUT"):
     # IMPORTANCE DES FEATURES D'UNE PERSONNE
     st.header("Client's features importance")
     st_shap(shap.plots.bar(shap_values_1[idx]))
+
     
+    # Distribution de Features
+    st.header("Features")
+    options = st.multiselect('SELECT TWO DIFFERENT FEATURES', options=selected_col, default=['CNT_CHILDREN', 'CODE_GENDER'])
+    option_features_1, option_features_2 = options[0], options[1]
+
+    df_f_1 = pd.DataFrame(df[option_features_1].value_counts())
+    index = list(df_f_1.index)
+    values = list(df_f_1[option_features_1])
+    fig = plt.figure(figsize = (30, 5))
+    v_1 = df_per_personne[option_features_1].loc[0]
+    clrs = ['red' if x==v_1 else 'grey' for x in index]
+    plt.bar(index, values, color=clrs)
+    plt.xlabel(option_features_1)
+    plt.ylabel("COUNT")
+    plt.title("REPARTION des données selon la variable "+option_features_1)
+    st.pyplot(fig)
+
+    df_f_2 = pd.DataFrame(df[option_features_2].value_counts())
+    index = list(df_f_2.index)
+    values = list(df_f_2[option_features_2])
+    fig = plt.figure(figsize = (30, 5))
+    v_2 = df_per_personne[option_features_2].loc[0]
+    clrs = ['red' if x==v_2 else 'grey' for x in index]
+    plt.bar(index, values, color=clrs)
+    plt.xlabel(option_features_2)
+    plt.ylabel("COUNT")
+    plt.title("REPARTION des données selon la variable "+option_features_2)
+    st.pyplot(fig)

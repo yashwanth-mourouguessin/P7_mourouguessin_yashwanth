@@ -11,3 +11,4 @@ streamlit_shap
 plotly
 shap
 matplotlib
+gunicorn
