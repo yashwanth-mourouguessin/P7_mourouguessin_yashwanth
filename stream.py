@@ -8,6 +8,8 @@ from streamlit_shap import st_shap
 import matplotlib.pyplot as plt
 import shap
 import plotly.graph_objects as go
+from plot import final
+st.set_option('deprecation.showPyplotGlobalUse', False)
 
 transformer = pickle.load(open('transformers.pkl', 'rb'))
 
@@ -85,26 +87,5 @@ with st.expander("OUTPUT"):
     options = st.multiselect('SELECT TWO DIFFERENT FEATURES', options=selected_col, default=['CNT_CHILDREN', 'CODE_GENDER'])
     option_features_1, option_features_2 = options[0], options[1]
 
-    df_f_1 = pd.DataFrame(df[option_features_1].value_counts())
-    index = list(df_f_1.index)
-    values = list(df_f_1[option_features_1])
-    fig = plt.figure(figsize = (30, 5))
-    v_1 = df_per_personne[option_features_1].loc[0]
-    clrs = ['red' if x==v_1 else 'grey' for x in index]
-    plt.bar(index, values, color=clrs)
-    plt.xlabel(option_features_1)
-    plt.ylabel("COUNT")
-    plt.title("REPARTION des données selon la variable "+option_features_1)
-    st.pyplot(fig)
-
-    df_f_2 = pd.DataFrame(df[option_features_2].value_counts())
-    index = list(df_f_2.index)
-    values = list(df_f_2[option_features_2])
-    fig = plt.figure(figsize = (30, 5))
-    v_2 = df_per_personne[option_features_2].loc[0]
-    clrs = ['red' if x==v_2 else 'grey' for x in index]
-    plt.bar(index, values, color=clrs)
-    plt.xlabel(option_features_2)
-    plt.ylabel("COUNT")
-    plt.title("REPARTION des données selon la variable "+option_features_2)
-    st.pyplot(fig)
+    st.pyplot(final(df, option, option_features_1))
+    st.pyplot(final(df, option, option_features_2))
