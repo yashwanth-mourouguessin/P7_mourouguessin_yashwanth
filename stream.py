@@ -29,7 +29,7 @@ selected_col = selected_col_1 + selected_col_2
 
 model = pickle.load(open('xgb_classifier_final.pkl', 'rb'))
 
-BASE = "https://scoringapi2.herokuapp.com"
+BASE = "https://apiscoringclient.herokuapp.com"
 
 st.title('Scoring Clients')
 
