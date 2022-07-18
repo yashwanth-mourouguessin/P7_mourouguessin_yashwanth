@@ -29,7 +29,7 @@ selected_col = selected_col_1 + selected_col_2
 
 model = pickle.load(open('xgb_classifier_final.pkl', 'rb'))
 
-BASE = "http://127.0.0.1:5000/"
+BASE = "https://scoring-client.herokuapp.com"
 
 st.title('Scoring Clients')
 
@@ -37,8 +37,7 @@ df = pd.read_csv('test_df.csv')
 
 vec = pd.DataFrame()
 for col in selected_col:
-    #vec[col] = transformer[col].transform([[elt] for elt in df[col]]).reshape(1, df.shape[0])[0]
-    vec[col] = transformer[col].transform([[elt] for elt in df[col]]).ravel()
+    vec[col] = transformer[col].transform([[elt] for elt in df[col]]).reshape(1, df.shape[0])[0]
 vec['SK_ID_CURR'] = df.SK_ID_CURR
 
 # FEATURE IMPORTANCE
@@ -54,6 +53,7 @@ st.dataframe(df_per_personne)
 
 #st.subheader("Transformed informations")
 vec_per_personne = vec.loc[vec.SK_ID_CURR == option]
+df_per_personne = df.loc[df.SK_ID_CURR == option]
 idx = vec.loc[vec.SK_ID_CURR == option].index[0]
 
 res = requests.post(BASE, json=json.loads(vec_per_personne[selected_col].to_json(orient="records")))
